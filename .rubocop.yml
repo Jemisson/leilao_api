@@ -1,0 +1,61 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+
+AllCops:
+  TargetRubyVersion: 3.0 # Substitua pela versão do Ruby que você utiliza
+  NewCops: enable # Habilita novas regras automaticamente
+  Exclude:
+    - 'db/schema.rb' # Ignora o schema do banco de dados
+    - 'bin/**/*' # Ignora arquivos na pasta bin
+    - 'node_modules/**/*' # Ignora arquivos no node_modules
+    - 'vendor/**/*' # Ignora arquivos na pasta vendor
+
+Rails:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false # Desabilita a exigência de comentários de documentação em classes e módulos
+
+# Configurações para Layout
+Layout/IndentationWidth:
+  Width: 2 # Configura indentação com 2 espaços
+
+Layout/LineLength:
+  Max: 120 # Define o limite de caracteres por linha
+
+# Configurações para Style (Estilo)
+Style/FrozenStringLiteralComment:
+  Enabled: true # Exige o comentário `# frozen_string_literal: true` no início dos arquivos
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes # Exige o uso de aspas simples para strings
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma # Exige vírgula no final de arrays multilinha
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma # Exige vírgula no final de hashes multilinha
+
+# Configurações para Performance
+Performance/CollectionLiteralInLoop:
+  Enabled: true
+
+Performance/InefficientHashSearch:
+  Enabled: true
+
+Performance/RedundantMerge:
+  Enabled: true
+
+# Configurações para Rails
+Rails/HttpPositionalArguments:
+  Enabled: true
+
+Rails/SaveBang:
+  Enabled: true # Sugere o uso de métodos como `save!` e `update!` para capturar erros
+
+Rails/SkipsModelValidations:
+  Enabled: true # Gera avisos ao usar métodos que ignoram validações (ex.: `update_column`)
+
+Rails/HasAndBelongsToMany:
+  Enabled: true # Sugere o uso de `has_many :through` em vez de `has_and_belongs_to_many`
