@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include Devise::JWT::RevocationStrategies::JTIMatcher
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -11,5 +13,13 @@ class User < ApplicationRecord
 
   def set_jti
     self.jti ||= SecureRandom.uuid
+  end
+
+  def self.jwt_revoked?(payload, user)
+    user.jti != payload['jti']
+  end
+
+  def self.revoke_jwt(_payload, user)
+    user.update_column(:jti, SecureRandom.uuid) # rubocop:disable Rails/SkipsModelValidations
   end
 end

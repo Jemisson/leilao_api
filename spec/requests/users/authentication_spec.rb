@@ -5,26 +5,27 @@ require 'rails_helper'
 RSpec.describe 'User Authentication', type: :request do
   let(:user) { create(:user) }
 
-  describe 'POST /api/v1/login' do
+  describe 'POST /login' do
     context 'com credenciais válidas' do
       it 'realiza o login e retorna o token do usuário' do
-        post '/api/v1/login', params: { user: { email: user.email, password: 'password' } }
-        p response.body
+        post '/login', params: { user: { email: user.email, password: 'password123' } }
 
-        # expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:ok)
 
-        # json = response.parsed_body
+        json = response.parsed_body
 
-        # expect(json['message']).to eq('Login realizado com sucesso')
-        # expect(json['user']['email']).to eq(user.email)
+        expect(json['message']).to eq('Login realizado com sucesso')
+        expect(json['user']['email']).to eq(user.email)
       end
     end
 
     # context 'com credenciais inválidas' do
     #   it 'retorna um erro' do
-    #     post '/api/v1/login', params: { user: { email: user.email, password: 'wrongpassword' } }
+    #     post '/login', params: { user: { email: user.email, password: 'wrongpassword' } }
     #     expect(response).to have_http_status(:unauthorized)
-    #     json = JSON.parse(response.body)
+
+    #     json = response.parsed_body
+
     #     expect(json['error']).to eq('Invalid Email or password.')
     #   end
     # end

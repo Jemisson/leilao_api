@@ -19,7 +19,7 @@ Devise.setup do |config|
   config.responder.redirect_status = :see_other
 
   config.jwt do |jwt|
-    jwt.secret = 'b0de275fbd78a1b8d73ebef94740e109fa58b3622f27a21e92ee9e548b8e912523d06e1add2262dd05f324ed7037d5d9a30e7bf6c21ca2b80af28eea97f9bebb'
+    jwt.secret = 'b0de275fbd78a1b8d73ebef94740e109fa58b3622f27a21e92ee9e548b8e912523d06e1add2262dd05f324ed7037d5d9a30e7bf6c21ca2b80af28eea97f9bebb' # rubocop:disable Layout/LineLength
     jwt.dispatch_requests = [
       ['POST', %r{^/login$}]
     ]
