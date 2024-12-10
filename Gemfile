@@ -4,6 +4,7 @@ ruby '3.0.0'
 
 gem 'bootsnap', require: false
 gem 'devise'
+gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'kaminari'
 gem 'pg', '~> 1.1'

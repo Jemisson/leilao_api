@@ -31,12 +31,6 @@ Style/FrozenStringLiteralComment:
 Style/StringLiterals:
   EnforcedStyle: single_quotes # Exige o uso de aspas simples para strings
 
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: comma # Exige vírgula no final de arrays multilinha
-
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: comma # Exige vírgula no final de hashes multilinha
-
 # Configurações para Performance
 Performance/CollectionLiteralInLoop:
   Enabled: true
