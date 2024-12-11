@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :categories
       resources :profile_users
+      resources :products
     end
   end
 end
