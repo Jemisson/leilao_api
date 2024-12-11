@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::CategoriesController, type: :request do
-  let(:user) { create(:user) } # Criação de usuário para autenticação
+  let(:user) { create(:user) }
   let(:auth_headers) do
     token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
     { 'Authorization' => "Bearer #{token}" }
@@ -19,14 +19,14 @@ RSpec.describe Api::V1::CategoriesController, type: :request do
     it 'retorna uma lista de categorias' do
       get '/api/v1/categories', headers: auth_headers
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['data'].size).to eq(3)
     end
 
     it 'filtra categorias por título' do
       get '/api/v1/categories', params: { title: 'Eletrônicos' }, headers: auth_headers
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['data'].size).to eq(1)
       expect(json['data'][0]['attributes']['title']).to eq('Eletrônicos')
     end
@@ -38,14 +38,14 @@ RSpec.describe Api::V1::CategoriesController, type: :request do
     it 'retorna uma categoria específica' do
       get "/api/v1/categories/#{category.id}", headers: auth_headers
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['data']['attributes']['title']).to eq(category.title)
     end
 
     it 'retorna erro 404 para categoria inexistente' do
       get '/api/v1/categories/9999', headers: auth_headers
       expect(response).to have_http_status(:not_found)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['error']).to eq('Categoria não encontrada')
     end
   end
@@ -57,14 +57,14 @@ RSpec.describe Api::V1::CategoriesController, type: :request do
     it 'cria uma nova categoria com parâmetros válidos' do
       post '/api/v1/categories', params: valid_params, headers: auth_headers
       expect(response).to have_http_status(:created)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['data']['attributes']['title']).to eq('Nova Categoria')
     end
 
     it 'retorna erro para parâmetros inválidos' do
       post '/api/v1/categories', params: invalid_params, headers: auth_headers
       expect(response).to have_http_status(:unprocessable_entity)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['errors']).to include("Title can't be blank")
     end
   end
@@ -77,14 +77,14 @@ RSpec.describe Api::V1::CategoriesController, type: :request do
     it 'atualiza a categoria com parâmetros válidos' do
       put "/api/v1/categories/#{category.id}", params: valid_params, headers: auth_headers
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['data']['attributes']['title']).to eq('Novo Título')
     end
 
     it 'retorna erro para parâmetros inválidos' do
       put "/api/v1/categories/#{category.id}", params: invalid_params, headers: auth_headers
       expect(response).to have_http_status(:unprocessable_entity)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['errors']).to include("Title can't be blank")
     end
   end

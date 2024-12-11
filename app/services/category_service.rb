@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryService
   class << self
     def create_category(params)

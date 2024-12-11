@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryFilter
   class << self
     def retrieve_all(params = {})
