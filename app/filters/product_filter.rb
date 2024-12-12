@@ -5,7 +5,7 @@ class ProductFilter
     def retrieve_all(params)
       Product
         .page(params[:page] || 1)
-        .per(params[:per_page] || 10)
+        .per(params[:per_page] || 12)
     end
 
     def search(id)
