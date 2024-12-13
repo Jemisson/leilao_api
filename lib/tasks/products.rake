@@ -1,7 +1,7 @@
 namespace :db do
   desc 'Create 10 fake products'
   task create_fake_products: :environment do
-    10.times do
+    30.times do
       Product.create!(
         lot_number: Faker::Number.unique.number(digits: 3).to_s,
         donor_name: Faker::Name.name,
