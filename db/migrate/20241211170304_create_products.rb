@@ -9,7 +9,9 @@ class CreateProducts < ActiveRecord::Migration[7.1]
       t.string :bidder_phone
       t.decimal :winning_value
       t.string :description
-
+      t.string :name
+      t.string :sold_at
+      t.integer :auctioned, default: 0
       t.timestamps
     end
   end

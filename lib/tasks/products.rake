@@ -1,19 +1,33 @@
+# frozen_string_literal: true
+
 namespace :db do
   desc 'Create 10 fake products'
   task create_fake_products: :environment do
-    30.times do
-      Product.create!(
-        lot_number: Faker::Number.unique.number(digits: 3).to_s,
-        donor_name: Faker::Name.name,
-        donor_phone: Faker::PhoneNumber.phone_number,
-        minimum_value: Faker::Commerce.price(range: 100.0..1000.0),
-        bidder_name: [Faker::Name.name, nil].sample,
-        bidder_phone: [Faker::PhoneNumber.phone_number, nil].sample,
-        winning_value: [Faker::Commerce.price(range: 100.0..1000.0), nil].sample,
-        description: Faker::Lorem.sentence(word_count: 10)
+    3.times do
+      category = Category.create!(
+        title: Faker::Commerce.department,
+        description: Faker::Lorem.sentence(word_count: 5)
       )
+
+      10.times do
+        minimum_value = Faker::Commerce.price(range: 100.0..1000.0)
+
+        Product.create!(
+          lot_number: Faker::Number.unique.number(digits: 3).to_s,
+          donor_name: Faker::Name.name,
+          donor_phone: Faker::PhoneNumber.phone_number,
+          minimum_value: minimum_value,
+          bidder_name: [Faker::Name.name, nil].sample,
+          bidder_phone: [Faker::PhoneNumber.phone_number, nil].sample,
+          winning_value: minimum_value,
+          name: Faker::Commerce.product_name,
+          description: Faker::Lorem.sentence(word_count: 10),
+          auctioned: 0,
+          category: category
+        )
+      end
     end
 
-    puts '10 fake products have been created!'
+    puts '30 fake products (10 per category) have been created!'
   end
 end
