@@ -11,6 +11,10 @@ Rails.application.routes.draw do
                        registrations: 'users/registrations'
                      }
 
+  namespace :auth do
+    get 'check', to: 'users/sessions#check'
+  end
+
   namespace :api do
     namespace :v1 do
       resources :categories

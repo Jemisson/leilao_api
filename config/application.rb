@@ -22,9 +22,18 @@ module Leilao
   class Application < Rails::Application
     config.api_only = true
     config.load_defaults 7.1
+
+    # Suporte a cookies
     config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore
-    config.autoload_lib(ignore: %w[assets tasks])
+
+    # Carrega manualmente o middleware
+    require_relative '../lib/middleware/jwt_cookie_authenticator'
+    config.middleware.use JWTCookieAuthenticator
+
+    # Carrega arquivos do diretório lib
+    config.autoload_paths << "#{config.root}/lib"
+
+    # Configurações adicionais
     config.time_zone = 'Central Time (US & Canada)'
     config.autoload_paths << "#{config.root}/app/services"
     config.autoload_paths << "#{config.root}/app/filters"
