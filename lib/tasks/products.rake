@@ -9,7 +9,7 @@ namespace :db do
         description: Faker::Lorem.sentence(word_count: 5)
       )
 
-      10.times do
+      20.times do
         minimum_value = Faker::Commerce.price(range: 100.0..1000.0)
 
         Product.create!(
