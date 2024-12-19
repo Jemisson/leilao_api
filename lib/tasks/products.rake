@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :db do
-  desc 'Create 10 fake products'
+  desc 'Create fake products'
   task create_fake_products: :environment do
     3.times do
       category = Category.create!(
@@ -28,6 +28,6 @@ namespace :db do
       end
     end
 
-    puts '30 fake products (10 per category) have been created!'
+    puts 'Fake products have been created!'
   end
 end
