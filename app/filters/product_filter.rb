@@ -3,7 +3,9 @@
 class ProductFilter
   class << self
     def retrieve_all(params)
-      products = Product.includes(:category)
+      products = Product
+                 .includes(:category)
+                 .with_attached_images
 
       products = products.where(category_id: params[:category_id]) if params[:category_id].present?
 

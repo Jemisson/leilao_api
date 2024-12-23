@@ -23,16 +23,18 @@ module Api
       end
 
       def create
-        product = Product.new(product_params)
-        if product.save
-          render json: ProductSerializer.new(product).serializable_hash.to_json, status: :created
+        @product = Product.new(product_params)
+        if @product.save
+          attach_images if params[:images].present?
+          render json: ProductSerializer.new(@product).serializable_hash.to_json, status: :created
         else
-          render json: { errors: product.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       def update
         if @product.update(product_params)
+          attach_images if params[:images].present?
           render json: ProductSerializer.new(@product).serializable_hash.to_json, status: :ok
         else
           render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
@@ -47,16 +49,23 @@ module Api
       private
 
       def set_product
-        @product = ProductFilter.search(params[:id])
-        return if @product
-
+        @product = Product.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
         render json: { error: 'Produto não encontrado' }, status: :not_found
+      end
+
+      def attach_images
+        params[:images].each do |image|
+          @product.images.attach(image)
+        end
       end
 
       def product_params
         params
           .require(:product)
-          .permit(:lot_number, :donor_name, :donor_phone, :minimum_value, :bidder_name, :bidder_phone, :winning_value, :description, :name, :auctioned, :category_id)
+          .permit(:lot_number, :donor_name, :donor_phone, :minimum_value,
+                  :bidder_name, :bidder_phone, :winning_value, :description,
+                  :name, :auctioned, :category_id, images: [])
       end
     end
   end
