@@ -12,6 +12,7 @@ class CreateProfileUsers < ActiveRecord::Migration[7.1]
       t.string :state
       t.string :country
       t.string :zip_code
+      t.string :phone
 
       t.timestamps
     end
