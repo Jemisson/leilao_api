@@ -13,9 +13,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :bids, except: %i[destroy]
       resources :categories
       resources :profile_users
-      resources :products
+      resources :products do
+        delete 'images/:image_id', to: 'products#destroy_image', as: 'destroy_image'
+      end
     end
   end
 end

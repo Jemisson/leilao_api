@@ -17,10 +17,6 @@ namespace :db do
           donor_name: Faker::Name.name,
           donor_phone: Faker::PhoneNumber.phone_number,
           minimum_value: minimum_value,
-          bidder_name: [Faker::Name.name, nil].sample,
-          bidder_phone: [Faker::PhoneNumber.phone_number, nil].sample,
-          winning_value: minimum_value,
-          name: Faker::Commerce.product_name,
           description: Faker::Lorem.sentence(word_count: 10),
           auctioned: 0,
           category: category

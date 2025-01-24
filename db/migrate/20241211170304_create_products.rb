@@ -5,11 +5,7 @@ class CreateProducts < ActiveRecord::Migration[7.1]
       t.string :donor_name
       t.string :donor_phone
       t.decimal :minimum_value
-      t.string :bidder_name
-      t.string :bidder_phone
-      t.decimal :winning_value
       t.string :description
-      t.string :name
       t.string :sold_at
       t.integer :auctioned, default: 0
       t.timestamps

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_23_035245) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_23_035204) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_035245) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "bids", force: :cascade do |t|
+    t.bigint "profile_user_id", null: false
+    t.bigint "product_id", null: false
+    t.decimal "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_bids_on_product_id"
+    t.index ["profile_user_id"], name: "index_bids_on_profile_user_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -54,16 +64,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_035245) do
     t.string "donor_name"
     t.string "donor_phone"
     t.decimal "minimum_value"
-    t.string "bidder_name"
-    t.string "bidder_phone"
-    t.decimal "winning_value"
     t.string "description"
-    t.string "name"
     t.string "sold_at"
     t.integer "auctioned", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "category_id", null: false
+    t.decimal "winning_value"
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
@@ -79,6 +86,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_035245) do
     t.string "state"
     t.string "country"
     t.string "zip_code"
+    t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_profile_users_on_user_id", unique: true
@@ -100,6 +108,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_035245) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bids", "products"
+  add_foreign_key "bids", "profile_users"
   add_foreign_key "products", "categories"
   add_foreign_key "profile_users", "users"
 end

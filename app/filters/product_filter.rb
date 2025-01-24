@@ -6,6 +6,7 @@ class ProductFilter
       products = Product
                  .includes(:category)
                  .with_attached_images
+                 .order(id: :asc)
 
       products = products.where(category_id: params[:category_id]) if params[:category_id].present?
 
