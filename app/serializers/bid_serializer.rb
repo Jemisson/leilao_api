@@ -16,4 +16,8 @@ class BidSerializer
   attribute :product do |bid|
     bid.product.id
   end
+
+  attribute :current_value do |object|
+    object.product.winning_value || object.product.minimum_value
+  end
 end

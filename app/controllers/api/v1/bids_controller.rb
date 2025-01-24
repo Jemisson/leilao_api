@@ -20,7 +20,7 @@ module Api
       end
 
       def create
-        bid = current_profile_user.bids.new(bid_params)
+        bid = current_user.profile_user.bids.new(bid_params)
 
         if bid.save
           render json: { message: 'Lance registrado com sucesso!', bid: bid }, status: :created
@@ -32,7 +32,7 @@ module Api
       private
 
       def bid_params
-        params.require(:bid).permit(:product_id, :value)
+        params.require(:bid).permit(:product_id, :value, :profile_user_id)
       end
     end
   end
