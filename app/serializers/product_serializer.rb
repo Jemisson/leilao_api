@@ -12,6 +12,11 @@ class ProductSerializer
     object.winning_value || object.minimum_value
   end
 
+  attribute :winning_name do |product|
+    highest_bid = product.bids.order(value: :desc).first
+    highest_bid&.profile_user&.name
+  end
+
   attribute :images do |product|
     if product.images.attached?
       product.images.map do |image|

@@ -8,9 +8,10 @@ class BidFilter
 
       bids = bids.where(product_id: params[:product_id]) if params[:product_id].present?
 
-      per_page = params[:per_page].presence || 999_999
+      per_page = params[:per_page].presence || 10
 
-      bids.page(params[:page] || 1)
+      bids.order(id: :desc)
+          .page(params[:page] || 1)
           .per(per_page)
     end
   end

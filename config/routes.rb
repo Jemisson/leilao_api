@@ -17,6 +17,9 @@ Rails.application.routes.draw do
       resources :categories
       resources :profile_users
       resources :products do
+        member do
+          patch :mark_as_sold
+        end
         delete 'images/:image_id', to: 'products#destroy_image', as: 'destroy_image'
       end
     end

@@ -3,7 +3,7 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :set_product, only: %i[show update destroy destroy_image]
+      before_action :set_product, only: %i[show update destroy destroy_image mark_as_sold]
 
       def index
         products = ProductFilter.retrieve_all(params)
@@ -54,6 +54,15 @@ module Api
           render json: { message: 'Imagem excluída com sucesso!' }, status: :ok
         else
           render json: { error: 'Imagem não encontrada' }, status: :not_found
+        end
+      end
+
+      def mark_as_sold
+        if @product.auctioned.zero?
+          ProductService.mark_as_sold(@product)
+          render json: { message: 'Produto arrematado com sucesso!', product: @product }, status: :ok
+        else
+          render json: { error: 'Produto já foi arrematado' }, status: :unprocessable_entity
         end
       end
 

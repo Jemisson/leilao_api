@@ -17,6 +17,10 @@ class BidSerializer
     bid.product.id
   end
 
+  attribute :lot_number do |bid|
+    bid.product.lot_number
+  end
+
   attribute :current_value do |object|
     object.product.winning_value || object.product.minimum_value
   end
