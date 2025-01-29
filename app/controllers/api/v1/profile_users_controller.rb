@@ -3,7 +3,9 @@
 module Api
   module V1
     class ProfileUsersController < ApplicationController
+      before_action :authenticate_user!
       before_action :set_profile_user, only: %i[show update destroy]
+      before_action :authorize_profile_user
 
       def index
         profile = ProfileUserFilter.retrieve_all(params)
@@ -53,6 +55,10 @@ module Api
 
       def set_profile_user
         @profile_user = ProfileUserFilter.search(params[:id])
+      end
+
+      def authorize_profile_user
+        authorize @profile_user
       end
 
       def profile_user_params

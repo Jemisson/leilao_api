@@ -3,8 +3,10 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  ROLES = %w[admin user].freeze
+
+  validates :role, inclusion: { in: ROLES, message: "%{value} não é um papel válido" }, allow_nil: true
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
@@ -12,6 +14,15 @@ class User < ApplicationRecord
   has_one :profile_user, dependent: :destroy
 
   before_create :set_jti
+  before_create :set_default_role
+
+  def admin?
+    role == 'admin'
+  end
+
+  def user?
+    role == 'user'
+  end
 
   def set_jti
     self.jti ||= SecureRandom.uuid
@@ -23,5 +34,11 @@ class User < ApplicationRecord
 
   def self.revoke_jwt(_payload, user)
     user.update_column(:jti, SecureRandom.uuid) # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  private
+
+  def set_default_role
+    self.role ||= 'user'
   end
 end

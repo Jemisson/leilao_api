@@ -3,7 +3,9 @@
 module Api
   module V1
     class ProductsController < ApplicationController
+      before_action :authenticate_user!, except: %i[index]
       before_action :set_product, only: %i[show update destroy destroy_image mark_as_sold]
+      before_action :authorize_product, only: %i[show update destroy destroy_image mark_as_sold]
 
       def index
         products = ProductFilter.retrieve_all(params)
@@ -24,6 +26,8 @@ module Api
 
       def create
         @product = Product.new(product_params)
+        authorize @product
+
         if @product.save
           attach_images if params[:images].present?
           render json: ProductSerializer.new(@product).serializable_hash.to_json, status: :created
@@ -48,7 +52,6 @@ module Api
 
       def destroy_image
         image = @product.images.find_by(id: params[:image_id])
-
         if image
           image.purge
           render json: { message: 'Imagem excluída com sucesso!' }, status: :ok
@@ -73,6 +76,10 @@ module Api
         @product = Product.find(id)
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Produto não encontrado' }, status: :not_found
+      end
+
+      def authorize_product
+        authorize @product
       end
 
       def attach_images

@@ -2,11 +2,17 @@
 
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  # before_action :authenticate_user!
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
 
   def record_not_found(exception)
     render json: { error: exception.message }, status: :not_found
+  end
+
+  def user_not_authorized
+    render json: { error: 'Você não tem permissão para realizar esta ação' }, status: :forbidden
   end
 end

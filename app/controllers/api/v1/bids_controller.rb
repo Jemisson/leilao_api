@@ -4,6 +4,7 @@ module Api
   module V1
     class BidsController < ApplicationController
       before_action :authenticate_user!
+      before_action :authorize_bid, only: %i[index create]
 
       def index
         bids = BidFilter.retrieve_all(params)
@@ -30,6 +31,10 @@ module Api
       end
 
       private
+
+      def authorize_bid
+        authorize Bid
+      end
 
       def bid_params
         params.require(:bid).permit(:product_id, :value, :profile_user_id)

@@ -3,7 +3,9 @@
 module Api
   module V1
     class CategoriesController < ApplicationController
+      before_action :authenticate_user!, except: %i[index]
       before_action :set_category, only: %i[show update destroy]
+      before_action :authorize_category, only: %i[create update show destroy]
 
       def index
         categories = CategoryFilter.retrieve_all(filter_params)
@@ -53,6 +55,10 @@ module Api
         @category = CategoryFilter.search(params[:id])
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Categoria não encontrada' }, status: :not_found
+      end
+
+      def authorize_category
+        authorize @category
       end
 
       def category_params

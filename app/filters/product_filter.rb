@@ -3,7 +3,11 @@
 class ProductFilter
   class << self
     def retrieve_all(params)
-      products = Product.includes(:category).with_attached_images.order(id: :asc)
+      products = Product
+                 .includes(:category)
+                 .includes(:bids)
+                 .with_attached_images
+                 .order(id: :asc)
 
       products = filter_by_category(products, params[:category_id])
       products = filter_by_auction_status(products, params[:auctioned])
