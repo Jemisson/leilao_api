@@ -28,6 +28,10 @@ class User < ApplicationRecord
     self.jti ||= SecureRandom.uuid
   end
 
+  def jwt_payload
+    super.merge({ role: role })
+  end
+
   def self.jwt_revoked?(payload, user)
     user.jti != payload['jti']
   end
