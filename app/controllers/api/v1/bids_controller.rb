@@ -24,6 +24,8 @@ module Api
         bid = current_user.profile_user.bids.new(bid_params)
 
         if bid.save
+          ActionCable.server.broadcast('bids_channel', BidSerializer.new(bid).serializable_hash)
+
           render json: { message: 'Lance registrado com sucesso!', bid: bid }, status: :created
         else
           render json: { errors: bid.errors.full_messages }, status: :unprocessable_entity

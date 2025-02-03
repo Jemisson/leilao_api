@@ -12,6 +12,7 @@ gem 'puma', '>= 5.0'
 gem 'pundit', '~> 2.4'
 gem 'rack-cors'
 gem 'rails', '~> 7.1.5'
+gem 'redis', '~> 5.3'
 gem 'rspec-rails', '~> 7.1'
 gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
 
