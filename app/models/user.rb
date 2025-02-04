@@ -29,7 +29,7 @@ class User < ApplicationRecord
   end
 
   def jwt_payload
-    super.merge({ role: role })
+    super.merge({ id: id, role: role })
   end
 
   def self.jwt_revoked?(payload, user)
