@@ -2,22 +2,22 @@
 
 class ProfileUserPolicy < ApplicationPolicy
   def index?
-    user.admin? # Apenas administradores podem listar perfis de usuários
+    user.admin? # Apenas administradores podem listar perfis
   end
 
   def show?
-    user.admin? # Apenas administradores podem visualizar perfis de usuários
+    user.admin? || record.user == user # Admins podem ver todos, usuários apenas seu próprio perfil
   end
 
   def create?
-    user.admin? # Apenas administradores podem criar perfis de usuários
+    true # Todos podem criar um perfil sem precisar estar logado
   end
 
   def update?
-    user.admin? # Apenas administradores podem atualizar perfis de usuários
+    user.admin? || record.user == user # Admins podem editar qualquer perfil, usuários só o próprio
   end
 
   def destroy?
-    user.admin? # Apenas administradores podem excluir perfis de usuários
+    user.admin? # Apenas admins podem excluir perfis
   end
 end
