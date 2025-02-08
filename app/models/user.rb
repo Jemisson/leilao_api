@@ -6,6 +6,8 @@ class User < ApplicationRecord
   ROLES = %w[admin user].freeze
 
   validates :role, inclusion: { in: ROLES, message: "%{value} não é um papel válido" }, allow_nil: true
+  validates :email, presence: true, uniqueness: true
+  validates :password, presence: true, length: { minimum: 6 }
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,

@@ -26,7 +26,6 @@ module Api
       end
 
       def create
-        # Cria o perfil e o usuário associado
         profile_user = ProfileUser.new(profile_user_params)
 
         if profile_user.save
