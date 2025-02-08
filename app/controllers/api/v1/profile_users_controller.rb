@@ -9,15 +9,14 @@ module Api
       before_action :authorize_admin, only: %i[index destroy]
 
       def index
-        profile = ProfileUserFilter.retrieve_all(params)
-
+        profiles = ProfileUserFilter.retrieve_all(params)
         render json: ProfileUserSerializer.new(
-          profile,
+          profiles,
           meta: {
-            total_count: profile.total_count,
-            total_pages: profile.total_pages,
-            current_page: profile.current_page,
-            per_page: profile.limit_value
+            total_count: profiles.total_count,
+            total_pages: profiles.total_pages,
+            current_page: profiles.current_page,
+            per_page: profiles.limit_value
           }
         ).serializable_hash.to_json, status: :ok
       end
@@ -27,12 +26,13 @@ module Api
       end
 
       def create
-        user = UserService.create_user(user_params, profile_user_params)
+        # Cria o perfil e o usuário associado
+        profile_user = ProfileUser.new(profile_user_params)
 
-        if user.persisted?
-          render json: UserSerializer.new(user).serializable_hash.to_json, status: :created
+        if profile_user.save
+          render json: ProfileUserSerializer.new(profile_user).serializable_hash.to_json, status: :created
         else
-          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: profile_user.errors.full_messages + profile_user.user&.errors&.full_messages.to_a }, status: :unprocessable_entity
         end
       end
 
@@ -53,6 +53,7 @@ module Api
 
       def set_profile_user
         @profile_user = ProfileUserFilter.search(params[:id])
+        render json: { error: 'Perfil não encontrado' }, status: :not_found unless @profile_user
       end
 
       def authorize_profile_user
@@ -63,16 +64,12 @@ module Api
         render json: { error: 'Acesso não autorizado' }, status: :forbidden unless current_user&.admin?
       end
 
-      def user_params
-        params
-          .require(:user)
-          .permit(:email, :password, :role)
-      end
-
       def profile_user_params
-        params
-          .require(:profile_user)
-          .permit(:name, :cpf, :birth, :street, :number, :neighborhood, :city, :state, :country, :zip_code, :phone)
+        params.require(:profile_user).permit(
+          :name, :cpf, :birth, :street, :number, :neighborhood, :city,
+          :state, :country, :zip_code, :phone,
+          user_attributes: %i[email password role _destroy]
+        )
       end
     end
   end
