@@ -67,7 +67,7 @@ module Api
         params.require(:profile_user).permit(
           :name, :cpf, :birth, :street, :number, :neighborhood, :city,
           :state, :country, :zip_code, :phone,
-          user_attributes: %i[email password role _destroy]
+          user_attributes: %i[id email password role _destroy]
         )
       end
     end
