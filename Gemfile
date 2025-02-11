@@ -15,6 +15,7 @@ gem 'rack-cors'
 gem 'rails', '~> 7.1.5'
 gem 'redis', '~> 5.3'
 gem 'rspec-rails', '~> 7.1'
+gem 'stringio', '~> 3.1', '>= 3.1.2'
 gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
 
 group :development, :test do
