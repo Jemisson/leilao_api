@@ -320,6 +320,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  base64 (~> 0.2.0)
   bootsnap
   debug
   devise
@@ -345,4 +346,4 @@ RUBY VERSION
    ruby 3.0.0p0
 
 BUNDLED WITH
-   2.5.9
+   2.5.23

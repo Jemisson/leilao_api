@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby '3.0.0'
 
+gem 'base64', '~> 0.2.0'
 gem 'bootsnap', require: false
 gem 'devise'
 gem 'devise-jwt'
