@@ -1,92 +1,103 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  # Rails.application.routes.default_url_options[:host] = 'https://seu-dominio.com'
+  # Configuração do host para URLs gerados pelo Rails (ex: ActionMailer)
+  Rails.application.routes.default_url_options[:host] = 'https://api_leilao.codenova.com.br'
 
-  # Settings specified here will take precedence over those in config/application.rb.
-
-  # Code is not reloaded between requests.
+  # Configurações específicas para o ambiente de produção
+  # Código não é recarregado entre requisições
   config.enable_reloading = false
 
-  # Eager load code on boot. This eager loads most of Rails and
-  # your application in memory, allowing both threaded web servers
-  # and those relying on copy on write to perform better.
-  # Rake tasks automatically ignore this option for performance.
+  # Eager load carrega todo o código da aplicação na memória, melhorando a performance
   config.eager_load = true
 
-  # Full error reports are disabled and caching is turned on.
+  # Desabilita relatórios de erros detalhados e ativa o cache
   config.consider_all_requests_local = false
 
-  # Ensures that a master key has been made available in ENV["RAILS_MASTER_KEY"], config/master.key, or an environment
-  # key such as config/credentials/production.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
+  # Exige a chave mestra para descriptografar credenciais
+  config.require_master_key = true
 
-  # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
-  # config.public_file_server.enabled = false
+  # Desabilita o servidor de arquivos estáticos (deixe o Nginx/Apache cuidar disso)
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.asset_host = "http://assets.example.com"
+  # Configuração do host de assets (se estiver usando um CDN ou servidor de assets)
+  # config.asset_host = "https://assets.seu-dominio.com"
 
-  # Specifies the header that your server uses for sending files.
-  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
-  # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
+  # Configuração para envio de arquivos via Nginx
+  config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
+  # Configuração do Active Storage para armazenamento local
   config.active_storage.service = :local
 
-  # Mount Action Cable outside main process or domain.
-  # config.action_cable.mount_path = nil
-  # config.action_cable.url = "wss://example.com/cable"
-  # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
+  # Configuração do Action Cable (WebSocket)
+  config.action_cable.url = "wss://api_leilao.codenova.com.br/cable"
+  config.action_cable.allowed_request_origins = ['https://api_leilao.codenova.com.br']
 
-  # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
-  # config.assume_ssl = true
-
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  # Força o uso de SSL e configura Strict-Transport-Security
   config.force_ssl = true
 
-  # Log to STDOUT by default
+  # Configuração de logs para STDOUT (útil para integração com sistemas de log como Docker)
   config.logger = ActiveSupport::Logger.new(STDOUT)
     .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
     .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
-  # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  # Adiciona tags aos logs (útil para rastreamento de requisições)
+  config.log_tags = [:request_id]
 
-  # "info" includes generic and useful information about system operation, but avoids logging too much
-  # information to avoid inadvertent exposure of personally identifiable information (PII). If you
-  # want to log everything, set the level to "debug".
+  # Define o nível de log (info é o padrão para produção)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Configuração de cache (use memcached ou Redis em produção)
+  config.cache_store = :memory_store
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter = :resque
-  # config.active_job.queue_name_prefix = "leilao_production"
+  # Configuração de filas para Active Job (use Sidekiq, Resque, etc.)
+  # config.active_job.queue_adapter = :sidekiq
+  # config.active_job.queue_name_prefix = "nome_do_app_production"
 
+  # Configuração do Action Mailer
   config.action_mailer.perform_caching = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.seu-servidor.com',
+    port:                 587,
+    user_name:            ENV['SMTP_USERNAME'],
+    password:             ENV['SMTP_PASSWORD'],
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
-
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation cannot be found).
+  # Configuração de fallbacks para I18n
   config.i18n.fallbacks = true
 
-  # Don't log any deprecations.
+  # Desabilita logs de depreciação
   config.active_support.report_deprecations = false
 
-  # Do not dump schema after migrations.
+  # Não despeja o schema após migrações
   config.active_record.dump_schema_after_migration = false
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Proteção contra DNS rebinding e ataques ao cabeçalho Host
+  config.hosts = [
+    "api_leilao.codenova.com.br", # Permite requisições do domínio principal
+    /.*\.api_leilao.codenova\.com/ # Permite requisições de subdomínios
+  ]
+
+  # Exclui o endpoint de health check da proteção de host
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Configuração de compressão de assets
+  config.middleware.use Rack::Deflater
+
+  # Configuração de tempo de compilação de assets
+  config.assets.compile = false
+  config.assets.digest = true
+  config.assets.version = '1.0'
+
+  # Configuração de segurança adicional
+  config.action_dispatch.default_headers = {
+    'X-Frame-Options' => 'DENY',
+    'X-Content-Type-Options' => 'nosniff',
+    'X-XSS-Protection' => '1; mode=block',
+    'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains; preload'
+  }
 end
