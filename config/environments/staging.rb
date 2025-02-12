@@ -1,9 +1,6 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  Rails.application.routes.default_url_options[:host] = 'https://api_staging_leilao.codenova.com.br'
-  Rails.application.routes.default_url_options[:protocol] = 'https'
-
   # Rails.application.routes.default_url_options[:host] = 'https://seu-dominio.com'
 
   # Settings specified here will take precedence over those in config/application.rb.
