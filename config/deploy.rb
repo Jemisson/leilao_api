@@ -82,7 +82,7 @@ task :staging do
   set :user, 'development'
   set :domain, '108.181.224.45'
   set :deploy_to, '/home/development/leilao_api'
-  set :branch, 'main'
+  set :branch, 'deploy'
 end
 
 # Server preview
