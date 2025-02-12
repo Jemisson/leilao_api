@@ -38,10 +38,10 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
-  config.action_cable.url = 'wss://api_staging_leilao.codenova.com.br/cable'
+  config.action_cable.url = 'wss://api_staging_leilao.codenova/cable'
   config.action_cable.allowed_request_origins = [
-    'https://api_staging_leilao.codenova.com.br',
-    'http://api_staging_leilao.codenova.com.br'
+    'https://api_staging_leilao.codenova',
+    'http://api_staging_leilao.codenova'
   ]
 
   config.action_cable.disable_request_forgery_protection = true
@@ -78,7 +78,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # config.action_mailer.default_url_options = { host: 'api_staging_leilao.codenova' }
+  config.action_mailer.default_url_options = { host: 'api_staging_leilao.codenova' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
