@@ -1,66 +1,44 @@
-# Este arquivo de configuração será avaliado pelo Puma. Os métodos de nível superior
-# invocados aqui fazem parte da DSL de configuração do Puma. Para mais informações
-# sobre os métodos fornecidos pela DSL, consulte https://puma.io/puma/Puma/DSL.html.
+# This configuration file will be evaluated by Puma. The top-level methods that
+# are invoked here are part of Puma's configuration DSL. For more information
+# about methods provided by the DSL, see https://puma.io/puma/Puma/DSL.html.
 
-# O Puma pode atender cada requisição em uma thread de um pool de threads interno.
-# O método `threads` recebe dois números: mínimo e máximo.
-# Qualquer biblioteca que use pools de threads deve ser configurada para corresponder
-# ao valor máximo especificado para o Puma. O padrão é 5 threads para mínimo e máximo.
+# Puma can serve each request in a thread from an internal thread pool.
+# The `threads` method setting takes two numbers: a minimum and maximum.
+# Any libraries that use thread pools should be configured to match
+# the maximum value specified for Puma. Default is set to 5 threads for minimum
+# and maximum; this matches the default thread size of Active Record.
 max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
 threads min_threads_count, max_threads_count
 
-# Ambiente do Rails
 rails_env = ENV.fetch("RAILS_ENV") { "development" }
 
-# Configurações específicas para produção
 if rails_env == "production"
-  # Número de workers (processos). Deve ser igual ao número de núcleos de CPU.
-  # Defina a variável de ambiente `WEB_CONCURRENCY` para ajustar o número de workers.
-  worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
-  workers worker_count
-
-  # Pré-carrega a aplicação para reduzir o uso de memória e melhorar a performance.
-  preload_app!
-
-  # Configuração do fork de workers para compatibilidade com o Action Cable (WebSocket)
-  before_fork do
-    ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
-    ActionCable.server.stop if defined?(ActionCable)
-  end
-
-  on_worker_boot do
-    ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
-    ActionCable.server.restart if defined?(ActionCable)
+  # If you are running more than 1 thread per process, the workers count
+  # should be equal to the number of processors (CPU cores) in production.
+  #
+  # It defaults to 1 because it's impossible to reliably detect how many
+  # CPU cores are available. Make sure to set the `WEB_CONCURRENCY` environment
+  # variable to match the number of processors.
+  worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { 1 })
+  if worker_count > 1
+    workers worker_count
+  else
+    preload_app!
   end
 end
+# Specifies the `worker_timeout` threshold that Puma will use to wait before
+# terminating a worker in development environments.
+worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
-# Timeout para workers em ambientes de desenvolvimento
-worker_timeout 3600 if rails_env == "development"
+# Specifies the `port` that Puma will listen on to receive requests; default is 3000.
+port ENV.fetch("PORT") { 3000 }
 
-# Porta que o Puma irá escutar (padrão: 3000)
-port ENV.fetch("PORT") { 4000 }
-
-# Ambiente do Puma
+# Specifies the `environment` that Puma will run in.
 environment rails_env
 
-# Arquivo PID para armazenar o ID do processo do Puma
+# Specifies the `pidfile` that Puma will use.
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
-# Permite que o Puma seja reiniciado pelo comando `bin/rails restart`
+# Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
-
-# Configuração do bind para aceitar conexões externas (útil para Docker ou servidores remotos)
-bind "tcp://0.0.0.0:#{ENV.fetch("PORT") { 4000 }}"
-
-# Configuração do log (opcional)
-if rails_env == "production"
-  stdout_redirect "log/puma.stdout.log", "log/puma.stderr.log", true
-end
-
-# Configuração de threads para o Action Cable
-if defined?(ActionCable)
-  after_fork do
-    ActionCable.server.config.worker_pool_size = max_threads_count
-  end
-end
