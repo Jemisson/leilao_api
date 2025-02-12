@@ -8,7 +8,7 @@ local:
 
 staging:
   service: Disk
-  root: "/home/development/leilao_api/shared/storage"
+  root: "/home/production/leilao_api/shared/storage"
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
