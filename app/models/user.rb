@@ -18,6 +18,8 @@ class User < ApplicationRecord
   before_create :set_jti
   before_create :set_default_role
 
+  accepts_nested_attributes_for :profile_user
+
   def admin?
     role == 'admin'
   end
