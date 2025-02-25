@@ -4,6 +4,10 @@ class ProductSerializer
   include JSONAPI::Serializer
   attributes :id, :lot_number, :donor_name, :donor_phone, :description, :auctioned, :minimum_value
 
+  attribute :category_id do |object|
+    object.category&.id
+  end
+
   attribute :category_title do |object|
     object.category&.title
   end
