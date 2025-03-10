@@ -17,6 +17,9 @@ Devise.setup do |config|
   config.sign_out_via = :delete
   config.responder.error_status = :unprocessable_entity
   config.responder.redirect_status = :see_other
+  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
+    scope: 'email,profile'
+  }
 
   config.jwt do |jwt|
     jwt.secret = 'b0de275fbd78a1b8d73ebef94740e109fa58b3622f27a21e92ee9e548b8e912523d06e1add2262dd05f324ed7037d5d9a30e7bf6c21ca2b80af28eea97f9bebb' # rubocop:disable Layout/LineLength
