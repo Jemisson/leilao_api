@@ -1,7 +1,9 @@
 class Api::V1::GoogleAuthController < ApplicationController
   def authenticate
-    token = params[:token]
-    email = params[:email]
+    google_auth_params = params[:google_auth] || params
+
+    token = google_auth_params[:token]
+    email = google_auth_params[:email]
 
     user_data = fetch_google_user_data(token)
 
@@ -19,11 +21,17 @@ class Api::V1::GoogleAuthController < ApplicationController
       }, status: :ok
     end
 
-    jwt_token = user.generate_jwt
+    jwt_token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
 
     render json: {
       message: 'Autenticado com sucesso!',
-      token: jwt_token
+      token: jwt_token,
+      user: {
+        id: user.id,
+        name: user.profile_user&.name,
+        email: user.email,
+        role: user.role
+      }
     }, status: :ok
   end
 

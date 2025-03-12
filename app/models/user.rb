@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   def generate_jwt
     payload = {
-      user_id: id,
+      id: id,
       name: profile_user&.name,
       email: email,
       role: role,
