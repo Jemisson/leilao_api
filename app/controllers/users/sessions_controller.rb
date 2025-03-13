@@ -10,6 +10,7 @@ class Users::SessionsController < Devise::SessionsController
       message: 'Login realizado com sucesso',
       user: {
         id: resource.id,
+        profile_id: resource.profile_user&.id,
         name: resource.profile_user&.name,
         email: resource.email,
         role: resource.role,

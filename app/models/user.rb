@@ -26,6 +26,7 @@ class User < ApplicationRecord
   def generate_jwt
     payload = {
       id: id,
+      profile_id: profile_user&.id,
       name: profile_user&.name,
       email: email,
       role: role,
@@ -49,7 +50,7 @@ class User < ApplicationRecord
   end
 
   def jwt_payload
-    super.merge({ id: id, role: role, name: profile_user&.name })
+    super.merge({ id: id, role: role, name: profile_user&.name, profile_id: profile_user&.id })
   end
 
   def self.jwt_revoked?(payload, user)
