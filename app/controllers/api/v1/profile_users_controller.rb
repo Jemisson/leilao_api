@@ -48,6 +48,11 @@ module Api
         head :no_content
       end
 
+      def bids_per_user
+        bids = ProfileUserFilter.retrieve_bids(params)
+        render json: BidSerializer.new(bids).serializable_hash.to_json, status: :ok
+      end
+
       private
 
       def set_profile_user
