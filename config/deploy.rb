@@ -78,10 +78,10 @@ end
 
 # Server staging
 task :staging do
-  set :rails_env, 'staging'
-  set :user, 'development'
-  set :domain, '108.181.224.45'
-  set :deploy_to, '/home/development/leilao_api'
+  set :rails_env, 'production'
+  set :user, 'deploy'
+  set :domain, '108.181.224.196'
+  set :deploy_to, '/home/deploy/leilao_api'
   set :branch, 'deploy'
 end
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::SessionsController < Devise::SessionsController
   respond_to :json
 
@@ -12,8 +10,11 @@ class Users::SessionsController < Devise::SessionsController
       message: 'Login realizado com sucesso',
       user: {
         id: resource.id,
+        profile_id: resource.profile_user&.id,
+        name: resource.profile_user&.name,
         email: resource.email,
-        jti: resource.jti
+        role: resource.role,
+        created_at: resource.created_at
       },
       token: token
     }, status: :ok

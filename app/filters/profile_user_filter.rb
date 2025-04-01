@@ -13,5 +13,15 @@ class ProfileUserFilter
     rescue ActiveRecord::RecordNotFound
       raise ActiveRecord::RecordNotFound, 'Perfil não encontrado'
     end
+
+    def retrieve_bids(params)
+      ProfileUser
+        .includes(:bids)
+        .find_by(user_id: params['profile_user_id'])
+        .bids
+        .order(id: :desc)
+        .page(params[:page] || 1)
+        .per(params[:per_page] || 10)
+    end
   end
 end
