@@ -6,7 +6,7 @@ Rails.application.configure do
   config.eager_load = true
   config.consider_all_requests_local = false
   config.active_storage.service = :production
-  config.action_cable.mount_path = nil
+  config.action_cable.mount_path = '/cable'
   config.action_cable.url = 'wss://apileilao.codenova.com.br/cable'
   config.action_cable.allowed_request_origins = ['https://api_leilao.codenova.com.br']
   config.force_ssl = true
