@@ -19,9 +19,6 @@ set :port, '22'
 set :forward_agent, true
 set :rails_env, 'production'
 
-set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
-set :cable_log, "#{deploy_to}/shared/log/cable.log"
-
 task :remote_environment do
   invoke :'rvm:use[ruby-3.0.0]'
 end
@@ -84,6 +81,9 @@ task :production do
   set :domain, '108.181.224.45'
   set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
+
+  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
+  set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
 
 # Server staging
@@ -93,6 +93,9 @@ task :staging do
   set :domain, '108.181.224.196'
   set :deploy_to, '/home/deploy/leilao_api'
   set :branch, 'production'
+
+  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
+  set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
 
 desc 'Start Action Cable'
