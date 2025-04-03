@@ -93,13 +93,13 @@ end
 desc 'Start Action Cable'
 task 'action_cable:start': :remote_environment do
   queue! %(echo "-----> Starting Action Cable...")
-  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} > #{deploy_to}/shared/log/cable.log 2>&1 &)
+  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} --pidfile #{deploy_to}/shared/pids/cable.pid > #{deploy_to}/shared/log/cable.log 2>&1 &)
 end
 
 desc 'Stop Action Cable'
 task 'action_cable:stop': :remote_environment do
   queue! %(echo "-----> Stopping Action Cable...")
-  queue! %(pkill -f "puma.*3002" || echo "Action Cable not running.")
+  queue! %(if [ -f #{deploy_to}/shared/pids/cable.pid ]; then kill -TERM $(cat #{deploy_to}/shared/pids/cable.pid) && rm #{deploy_to}/shared/pids/cable.pid; else echo "No cable.pid file found"; fi)
 end
 
 desc 'Restart Action Cable'
