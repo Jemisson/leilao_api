@@ -99,7 +99,13 @@ end
 desc 'Stop Action Cable'
 task 'action_cable:stop': :remote_environment do
   queue! %(echo "-----> Stopping Action Cable...")
-  queue! %(if [ -f #{deploy_to}/shared/pids/cable.pid ]; then kill -TERM $(cat #{deploy_to}/shared/pids/cable.pid) && rm #{deploy_to}/shared/pids/cable.pid; else echo "No cable.pid file found"; fi)
+  queue! %(
+    if [ -f #{deploy_to}/shared/pids/cable.pid ] && [ -s #{deploy_to}/shared/pids/cable.pid ]; then
+      kill -TERM $(cat #{deploy_to}/shared/pids/cable.pid) && rm #{deploy_to}/shared/pids/cable.pid;
+    else
+      echo "No valid cable.pid file found. Skipping stop.";
+    fi
+  )
 end
 
 desc 'Restart Action Cable'
