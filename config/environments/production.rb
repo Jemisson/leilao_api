@@ -8,12 +8,14 @@ Rails.application.configure do
   config.active_storage.service = :production
   config.action_cable.mount_path = '/cable'
   config.action_cable.url = 'wss://apileilao.codenova.com.br/cable'
-  config.action_cable.allowed_request_origins = ['https://api_leilao.codenova.com.br']
+  config.action_cable.allowed_request_origins = [
+    'https://apileilao.codenova.com.br',
+    'https://leilao.codenova.com.br'
+  ]
   config.force_ssl = true
-
   config.logger = ActiveSupport::Logger.new(STDOUT)
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+                                       .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
+                                       .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   config.log_tags = [ :request_id ]
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
