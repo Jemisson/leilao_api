@@ -49,6 +49,9 @@ task setup: :remote_environment do
 
   queue! %(touch "#{deploy_to}/shared/config/secrets.yml")
   queue  %(echo "-----> Be sure to edit 'shared/config/secrets.yml'.")
+
+  queue! %(touch "#{deploy_to}/shared/log/cable.log")
+  queue! %(chmod g+rx,u+rw "#{deploy_to}/shared/log/cable.log")
 end
 
 desc 'Deploys the current version to the server.'
@@ -63,6 +66,8 @@ task deploy: :remote_environment do
     to :launch do
       queue %(echo -n '-----> Creating new restart.txt: ')
       queue "touch #{deploy_to}/shared/tmp/restart.txt"
+
+      invoke :'action_cable:restart'
     end
   end
 end
@@ -83,6 +88,24 @@ task :staging do
   set :domain, '108.181.224.196'
   set :deploy_to, '/home/deploy/leilao_api'
   set :branch, 'production'
+end
+
+desc 'Start Action Cable'
+task 'action_cable:start': :remote_environment do
+  queue! %(echo "-----> Starting Action Cable...")
+  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} > #{deploy_to}/shared/log/cable.log 2>&1 &)
+end
+
+desc 'Stop Action Cable'
+task 'action_cable:stop': :remote_environment do
+  queue! %(echo "-----> Stopping Action Cable...")
+  queue! %(pkill -f "puma.*3002" || echo "Action Cable not running.")
+end
+
+desc 'Restart Action Cable'
+task 'action_cable:restart': :remote_environment do
+  invoke :'action_cable:stop'
+  invoke :'action_cable:start'
 end
 
 # Server preview
