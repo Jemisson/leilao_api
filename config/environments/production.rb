@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  Rails.application.routes.default_url_options[:host] = 'https://api_leilao.codenova.com.br/'
+  Rails.application.routes.default_url_options[:host] = 'https://apileilao.codenova.com.br/'
   config.enable_reloading = false
   config.eager_load = true
   config.consider_all_requests_local = false
@@ -17,10 +17,12 @@ Rails.application.configure do
                                        .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
                                        .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
-  config.log_tags = [ :request_id ]
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+  config.log_tags = [:request_id]
+  config.log_level = :debug
   config.action_mailer.perform_caching = false
   config.i18n.fallbacks = true
   config.active_support.report_deprecations = false
   config.active_record.dump_schema_after_migration = false
+  config.action_cable.disable_request_forgery_protection = true
+
 end
