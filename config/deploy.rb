@@ -29,7 +29,6 @@ task setup: :remote_environment do
 
   queue! %(mkdir -p "#{deploy_to}/storage")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/storage")
-
   queue! %(touch "#{deploy_to}/storage/index.html")
 
   queue! %(mkdir -p "#{deploy_to}/shared/config")
@@ -37,6 +36,9 @@ task setup: :remote_environment do
 
   queue! %(mkdir -p "#{deploy_to}/shared/pids")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/pids")
+
+  queue! %(mkdir -p "#{deploy_to}/shared/tmp/pids")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids")
 
   queue! %(mkdir -p "#{deploy_to}/shared/tmp")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/tmp")
@@ -79,6 +81,9 @@ task :production do
   set :domain, '108.181.224.45'
   set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
+
+  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
+  set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
 
 # Server staging
@@ -88,22 +93,26 @@ task :staging do
   set :domain, '108.181.224.196'
   set :deploy_to, '/home/deploy/leilao_api'
   set :branch, 'production'
+
+  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
+  set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
 
 desc 'Start Action Cable'
 task 'action_cable:start': :remote_environment do
   queue! %(echo "-----> Starting Action Cable...")
-  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} --pidfile #{deploy_to}/shared/pids/cable.pid > #{deploy_to}/shared/log/cable.log 2>&1 &)
+  queue! %(mkdir -p #{deploy_to}/shared/tmp/pids)
+  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} --pidfile #{cable_pid} > #{cable_log} 2>&1 &)
 end
 
 desc 'Stop Action Cable'
 task 'action_cable:stop': :remote_environment do
   queue! %(echo "-----> Stopping Action Cable...")
   queue! %(
-    if [ -f #{deploy_to}/shared/pids/cable.pid ] && [ -s #{deploy_to}/shared/pids/cable.pid ]; then
-      kill -TERM $(cat #{deploy_to}/shared/pids/cable.pid) && rm #{deploy_to}/shared/pids/cable.pid;
+    if [ -f #{cable_pid} ]; then
+      kill -TERM $(cat #{cable_pid}) && rm #{cable_pid};
     else
-      echo "No valid cable.pid file found. Skipping stop.";
+      echo "Cable PID file not found. Skipping stop.";
     fi
   )
 end
@@ -126,7 +135,14 @@ end
 # Fix
 set :term_mode, nil
 
-set :shared_paths, ['public/uploads', 'config/database.yml', 'log', 'tmp', 'config/application.yml', 'config/secrets.yml']
+set :shared_paths, [
+  'public/uploads',
+  'config/database.yml',
+  'log',
+  'tmp',
+  'config/application.yml',
+  'config/secrets.yml'
+]
 
 # Show logs
 desc 'Show logs rails.'
