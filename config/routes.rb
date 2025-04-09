@@ -16,12 +16,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post 'google_auth', to: 'google_auth#authenticate'
+      get 'dashboard', to: 'dashboard#index'
       resources :bids, except: %i[destroy]
       resources :categories
       resources :profile_users do
         get 'bids', to: 'profile_users#bids_per_user', as: 'bids_user'
       end
       resources :products do
+        collection do
+          get :search
+        end
         member do
           patch :mark_as_sold
         end
