@@ -13,9 +13,19 @@ Rails.application.configure do
     'https://leilao.codenova.com.br'
   ]
   config.force_ssl = true
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-                                       .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-                                       .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+
+  config.log_formatter = ::Logger::Formatter.new
+
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  else
+    log_path = "/home/deploy/leilao_api/shared/log/production.log"
+    logger = ActiveSupport::Logger.new(log_path, 'daily')
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
 
   config.log_tags = [:request_id]
   config.log_level = :debug

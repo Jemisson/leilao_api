@@ -91,7 +91,7 @@ module Api
       def product_params
         params
           .require(:product)
-          .permit(:lot_number, :donor_name, :donor_phone, :minimum_value,
+          .permit(:lot_number, :link_video, :donor_name, :donor_phone, :minimum_value,
                   :bidder_name, :bidder_phone, :winning_value, :description,
                   :auctioned, :category_id, images: [])
       end
