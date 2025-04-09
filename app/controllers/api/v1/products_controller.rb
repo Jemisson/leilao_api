@@ -69,6 +69,18 @@ module Api
         end
       end
 
+      def search
+        products = ProductFilter.retireve_filtered_produducts(params)
+        render json: ProductSerializer.new(
+          products, meta: {
+            total_count: products.total_count,
+            total_pages: products.total_pages,
+            current_page: products.current_page,
+            per_page: products.limit_value
+          }
+        ).serializable_hash.to_json, status: :ok
+      end
+
       private
 
       def set_product

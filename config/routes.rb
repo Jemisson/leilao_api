@@ -22,6 +22,9 @@ Rails.application.routes.draw do
         get 'bids', to: 'profile_users#bids_per_user', as: 'bids_user'
       end
       resources :products do
+        collection do
+          get :search
+        end
         member do
           patch :mark_as_sold
         end
