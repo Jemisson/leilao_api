@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title><%= @product.lot_number %> |Leilões Virtuais</title>
+
+  <meta property="og:title" content="<%= @product.lot_number %>" />
+  <meta property="og:description" content="<%= @product.description.truncate(100) %>" />
+  <meta property="og:url" content="<%= request.original_url %>" />
+  <meta property="og:type" content="website" />
+
+  <% if @product.images.attached? && @product.link_video.blank?%>
+    <meta property="og:image" content="<%= polymorphic_url(@product.images.first, host: request.base_url) %>" />
+  <% elsif @product.link_video.present? %>
+    <meta property="og:type" content="video.other" />
+    <meta property="og:video:url" content="<%= @product.video_embed_url %>" />
+    <meta property="og:video:secure_url" content="<%= @product.video_embed_url %>" />
+    <meta property="og:video:type" content="text/html" />
+    <meta property="og:video:width" content="1280" />
+    <meta property="og:video:height" content="720" />
+    <meta property="og:image" content="<%= @product.video_thumbnail_url %>" />
+  <% end %>
+
+  <% frontend_url = Rails.env.production? ? "https://leilao.codenova.com.br" : "http://localhost:5173" %>
+
+  <script>
+    setTimeout(function() {
+      window.location.href = "<%= "#{frontend_url}/produto/#{@product.id}" %>";
+    }, 1000);
+  </script>
+</head>
+<body>
+  Redirecionando para o produto...
+</body>
+</html>

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
                        registrations: 'users/registrations'
                      }
 
+  get 'share/products/:id', to: 'share#product', as: :share_product
+
   namespace :api do
     namespace :v1 do
       post 'google_auth', to: 'google_auth#authenticate'
