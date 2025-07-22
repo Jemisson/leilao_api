@@ -9,9 +9,9 @@ require 'mina/rvm'
 # set :ruby_version, '3.0.0'
 
 # Repository project
-set :application_name, 'leilao'
+set :application_name, 'leilao_api_hospital_de_amor'
 set :domain, '45.178.183.76'
-set :deploy_to, '/home/production/leilao'
+set :deploy_to, '/home/production/leilao_api'
 set :repository, 'git@github.com:Jemisson/leilao_api.git'
 set :branch, 'hospital_de_amor'
 set :user, 'production'
@@ -82,7 +82,7 @@ task :production do
   set :rails_env, 'production'
   set :user, 'production'
   set :domain, '45.178.183.76'
-  set :deploy_to, '/home/production/leilao'
+  set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
 
   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"

@@ -1,16 +1,16 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  Rails.application.routes.default_url_options[:host] = 'https://apileilao.codenova.com.br/'
+  Rails.application.routes.default_url_options[:host] = 'https://leiloescapuci.com.br/'
   config.enable_reloading = false
   config.eager_load = true
   config.consider_all_requests_local = false
   config.active_storage.service = :production
   config.action_cable.mount_path = '/cable'
-  config.action_cable.url = 'wss://apileilao.codenova.com.br/cable'
+  config.action_cable.url = 'wss://apileiloescapuci.com.br/cable'
   config.action_cable.allowed_request_origins = [
-    'https://apileilao.codenova.com.br',
-    'https://leilao.codenova.com.br'
+    'https://apileiloescapuci.com.br',
+    'https://leiloescapuci.com.br'
   ]
   config.force_ssl = true
 
@@ -21,7 +21,7 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   else
-    log_path = "/home/deploy/leilao_api/shared/log/production.log"
+    log_path = "/home/production/leilao_api/shared/log/production.log"
     logger = ActiveSupport::Logger.new(log_path, 'daily')
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)

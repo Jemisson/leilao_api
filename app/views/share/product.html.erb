@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title><%= @product.lot_number %> |Leilões Virtuais</title>
+  <title><%= @product.lot_number %> | Leilões Capuci</title>
 
   <meta property="og:title" content="<%= @product.lot_number %>" />
   <meta property="og:description" content="<%= @product.description.truncate(100) %>" />
@@ -21,7 +21,7 @@
     <meta property="og:image" content="<%= @product.video_thumbnail_url %>" />
   <% end %>
 
-  <% frontend_url = Rails.env.production? ? "https://leilao.codenova.com.br" : "http://localhost:5173" %>
+  <% frontend_url = Rails.env.production? ? "https://leiloescapuci.com.br" : "http://localhost:5173" %>
 
   <script>
     setTimeout(function() {
