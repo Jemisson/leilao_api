@@ -9,11 +9,11 @@ require 'mina/rvm'
 # set :ruby_version, '3.0.0'
 
 # Repository project
-set :application_name, 'leilao_api'
-set :domain, '108.181.224.45'
-set :deploy_to, '/home/production/leilao_api'
+set :application_name, 'leilao'
+set :domain, '45.178.183.76'
+set :deploy_to, '/home/production/leilao'
 set :repository, 'git@github.com:Jemisson/leilao_api.git'
-set :branch, 'production'
+set :branch, 'hospital_de_amor'
 set :user, 'production'
 set :port, '22'
 set :forward_agent, true
@@ -54,6 +54,9 @@ task setup: :remote_environment do
 
   queue! %(touch "#{deploy_to}/shared/log/cable.log")
   queue! %(chmod g+rx,u+rw "#{deploy_to}/shared/log/cable.log")
+
+  queue! %(mkdir -p "#{deploy_to}/shared/uploads")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/uploads")
 end
 
 desc 'Deploys the current version to the server.'
@@ -78,25 +81,14 @@ end
 task :production do
   set :rails_env, 'production'
   set :user, 'production'
-  set :domain, '108.181.224.45'
-  set :deploy_to, '/home/production/leilao_api'
+  set :domain, '45.178.183.76'
+  set :deploy_to, '/home/production/leilao'
   set :branch, 'production'
 
   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
   set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
 
-# Server staging
-task :staging do
-  set :rails_env, 'production'
-  set :user, 'deploy'
-  set :domain, '108.181.224.196'
-  set :deploy_to, '/home/deploy/leilao_api'
-  set :branch, 'production'
-
-  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
-  set :cable_log, "#{deploy_to}/shared/log/cable.log"
-end
 
 desc 'Start Action Cable'
 task 'action_cable:start': :remote_environment do
@@ -123,20 +115,11 @@ task 'action_cable:restart': :remote_environment do
   invoke :'action_cable:start'
 end
 
-# Server preview
-# task :preview do
-#   set :rails_env, 'preview'
-#   set :user, 'development'
-#   set :domain, '108.181.224.45'
-#   set :deploy_to, '/home/development/clinica_de_olhos_api'
-#   set :branch, 'staging'
-# end
-
-# Fix
 set :term_mode, nil
 
 set :shared_paths, [
   'public/uploads',
+  'shared/uploads',
   'config/database.yml',
   'log',
   'tmp',
