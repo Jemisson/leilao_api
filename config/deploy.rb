@@ -83,12 +83,11 @@ task :production do
   set :user, 'production'
   set :domain, '45.178.183.76'
   set :deploy_to, '/home/production/leilao_api'
-  set :branch, 'production'
+  set :branch, 'hospital_de_amor'
 
   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
   set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
-
 
 desc 'Start Action Cable'
 task 'action_cable:start': :remote_environment do
