@@ -1,7 +1,7 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
-  Rails.application.routes.default_url_options[:host] = 'https://leiloescapuci.com.br/'
+  Rails.application.routes.default_url_options[:host] = 'https://api.leiloescapuci.com.br/'
   config.enable_reloading = false
   config.eager_load = true
   config.consider_all_requests_local = false
@@ -9,19 +9,19 @@ Rails.application.configure do
   config.action_cable.mount_path = '/cable'
   config.action_cable.url = 'wss://apileiloescapuci.com.br/cable'
   config.action_cable.allowed_request_origins = [
-    'https://apileiloescapuci.com.br',
+    'https://api.leiloescapuci.com.br',
     'https://leiloescapuci.com.br'
   ]
   config.force_ssl = true
 
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   else
-    log_path = "/home/production/leilao_api/shared/log/production.log"
+    log_path = '/home/production/leilao_api/shared/log/production.log'
     logger = ActiveSupport::Logger.new(log_path, 'daily')
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
@@ -34,5 +34,4 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
   config.active_record.dump_schema_after_migration = false
   config.action_cable.disable_request_forgery_protection = true
-
 end
