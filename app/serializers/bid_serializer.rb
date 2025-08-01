@@ -3,7 +3,7 @@
 class BidSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :value, :created_at
+  attributes :id, :value, :created_at, :notes
 
   attribute :name do |bid|
     bid.profile_user.name

@@ -39,7 +39,7 @@ module Api
       end
 
       def bid_params
-        params.require(:bid).permit(:product_id, :value, :profile_user_id)
+        params.require(:bid).permit(:product_id, :value, :profile_user_id, :notes)
       end
     end
   end
