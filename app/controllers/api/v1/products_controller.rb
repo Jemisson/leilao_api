@@ -3,7 +3,7 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :authenticate_user!, except: %i[index]
+      before_action :authenticate_user!, except: %i[index show]
       before_action :set_product, only: %i[show update destroy destroy_image mark_as_sold]
       before_action :authorize_product, only: %i[show update destroy destroy_image mark_as_sold]
 
