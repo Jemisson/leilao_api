@@ -87,16 +87,16 @@ task :production do
 end
 
 # Server staging
-task :staging do
-  set :rails_env, 'production'
-  set :user, 'deploy'
-  set :domain, '108.181.224.196'
-  set :deploy_to, '/home/deploy/leilao_api'
-  set :branch, 'production'
+# task :staging do
+#   set :rails_env, 'production'
+#   set :user, 'deploy'
+#   set :domain, '108.181.224.196'
+#   set :deploy_to, '/home/deploy/leilao_api'
+#   set :branch, 'production'
 
-  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
-  set :cable_log, "#{deploy_to}/shared/log/cable.log"
-end
+#   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
+#   set :cable_log, "#{deploy_to}/shared/log/cable.log"
+# end
 
 desc 'Start Action Cable'
 task 'action_cable:start': :remote_environment do
