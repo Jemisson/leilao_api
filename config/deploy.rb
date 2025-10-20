@@ -13,7 +13,7 @@ set :application_name, 'leilao_api'
 set :domain, '108.181.224.45'
 set :deploy_to, '/home/production/leilao_api'
 set :repository, 'git@github.com:Jemisson/leilao_api.git'
-set :branch, 'production'
+set :branch, 'com_sao_francisco_2025'
 set :user, 'production'
 set :port, '22'
 set :forward_agent, true
@@ -80,7 +80,7 @@ task :production do
   set :user, 'production'
   set :domain, '108.181.224.45'
   set :deploy_to, '/home/production/leilao_api'
-  set :branch, 'production'
+  set :branch, 'com_sao_francisco_2025'
 
   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
   set :cable_log, "#{deploy_to}/shared/log/cable.log"
