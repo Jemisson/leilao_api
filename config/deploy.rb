@@ -10,7 +10,7 @@ require 'mina/rvm'
 
 # Repository project
 set :application_name, 'leilao_api'
-set :domain, '108.181.224.45'
+set :domain, '108.181.224.196'
 set :deploy_to, '/home/production/leilao_api'
 set :repository, 'git@github.com:Jemisson/leilao_api.git'
 set :branch, 'com_sao_francisco_2025'
@@ -77,9 +77,9 @@ end
 # Server Production
 task :production do
   set :rails_env, 'production'
-  set :user, 'production'
-  set :domain, '108.181.224.45'
-  set :deploy_to, '/home/production/leilao_api'
+  set :user, 'deploy'
+  set :domain, '108.181.224.196'
+  set :deploy_to, '/home/deploy/leilao_api'
   set :branch, 'com_sao_francisco_2025'
 
   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
@@ -127,7 +127,7 @@ end
 # task :preview do
 #   set :rails_env, 'preview'
 #   set :user, 'development'
-#   set :domain, '108.181.224.45'
+#   set :domain, '108.181.224.196'
 #   set :deploy_to, '/home/development/clinica_de_olhos_api'
 #   set :branch, 'staging'
 # end
