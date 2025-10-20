@@ -21,7 +21,7 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   else
-    log_path = "/home/deploy/leilao_api/shared/log/production.log"
+    log_path = "/home/production/leilao_api/shared/log/production.log"
     logger = ActiveSupport::Logger.new(log_path, 'daily')
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
@@ -34,5 +34,4 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
   config.active_record.dump_schema_after_migration = false
   config.action_cable.disable_request_forgery_protection = true
-
 end
