@@ -20,7 +20,6 @@ gem 'redis', '~> 5.3'
 gem 'rspec-rails', '~> 7.1'
 gem 'stringio', '~> 3.1', '>= 3.1.2'
 gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
-gem "uri", "1.0.3"
 
 group :development, :test do
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
