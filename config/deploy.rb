@@ -102,7 +102,7 @@ desc 'Start Action Cable'
 task 'action_cable:start': :remote_environment do
   queue! %(echo "-----> Starting Action Cable...")
   queue! %(mkdir -p #{deploy_to}/shared/tmp/pids)
-  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} --pidfile #{cable_pid} > #{cable_log} 2>&1 &)
+  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=production bundle exec puma -p 3002 --pidfile /home/deploy/leilao_api/shared/tmp/pids/cable.pid > /home/deploy/leilao_api/shared/log/cable.log 2>&1 &)
 end
 
 desc 'Stop Action Cable'
