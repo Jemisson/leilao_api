@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+Fixnum = Integer unless Object.const_defined?(:Fixnum)
+Bignum = Integer unless Object.const_defined?(:Bignum)
+
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
