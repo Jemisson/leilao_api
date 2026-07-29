@@ -21,6 +21,8 @@ set :user, 'production'
 set :port, '22'
 set :forward_agent, true
 set :rails_env, 'production'
+set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
+set :cable_log, "#{deploy_to}/shared/log/cable.log"
 
 task :remote_environment do
   invoke :'rvm:use[ruby-3.4.1]'
@@ -146,6 +148,24 @@ set :shared_paths, [
   'config/application.yml',
   'config/secrets.yml'
 ]
+
+Rake::Task['bundle:install'].clear
+
+namespace :bundle do
+  desc 'Install gem dependencies using Bundler.'
+  task :install do
+    queue %{
+      echo "-----> Installing gem dependencies using Bundler"
+      #{echo_cmd %[mkdir -p "#{deploy_to}/#{shared_path}/bundle"]}
+      #{echo_cmd %[mkdir -p "#{File.dirname bundle_path}"]}
+      #{echo_cmd %[ln -s "#{deploy_to}/#{shared_path}/bundle" "#{bundle_path}"]}
+      #{echo_cmd %[#{bundle_bin} config set path "#{bundle_path}"]}
+      #{echo_cmd %[#{bundle_bin} config set without "#{bundle_withouts}"]}
+      #{echo_cmd %[#{bundle_bin} config set deployment true]}
+      #{echo_cmd %[#{bundle_bin} install]}
+    }
+  end
+end
 
 # Show logs
 desc 'Show logs rails.'
