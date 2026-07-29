@@ -13,7 +13,7 @@ require 'mina/rvm'
 
 # Repository project
 set :application_name, 'leilao_api'
-set :domain, '45.178.183.76'
+set :domain, 'api.leiloescapuci.com.br'
 set :deploy_to, '/home/production/leilao_api'
 set :repository, 'git@github.com:Jemisson/leilao_api.git'
 set :branch, 'production'
@@ -59,6 +59,9 @@ task setup: :remote_environment do
 
   queue! %(touch "#{deploy_to}/shared/log/cable.log")
   queue! %(chmod g+rx,u+rw "#{deploy_to}/shared/log/cable.log")
+
+  queue! %(touch "#{deploy_to}/shared/log/production.log")
+  queue! %(chmod g+rx,u+rw "#{deploy_to}/shared/log/production.log")
 end
 
 desc 'Deploys the current version to the server.'
@@ -83,7 +86,7 @@ end
 task :production do
   set :rails_env, 'production'
   set :user, 'production'
-  set :domain, '45.178.183.76'
+  set :domain, 'api.leiloescapuci.com.br'
   set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
 
@@ -94,9 +97,9 @@ end
 # Server staging
 task :staging do
   set :rails_env, 'production'
-  set :user, 'deploy'
+  set :user, 'production'
   set :domain, '108.181.224.196'
-  set :deploy_to, '/home/deploy/leilao_api'
+  set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
 
   set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
@@ -132,7 +135,7 @@ end
 # task :preview do
 #   set :rails_env, 'preview'
 #   set :user, 'development'
-#   set :domain, '45.178.183.76'
+#   set :domain, 'api.leiloescapuci.com.br'
 #   set :deploy_to, '/home/development/clinica_de_olhos_api'
 #   set :branch, 'staging'
 # end
