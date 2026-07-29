@@ -10,5 +10,6 @@ FactoryBot.define do
     bidder_phone { [Faker::PhoneNumber.phone_number, nil].sample }
     winning_value { [Faker::Commerce.price(range: 100.0..1000.0), nil].sample }
     description { Faker::Lorem.sentence(word_count: 10) }
+    featured { false }
   end
 end

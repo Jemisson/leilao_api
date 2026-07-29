@@ -2,7 +2,12 @@
 
 class ProductSerializer
   include JSONAPI::Serializer
-  attributes :id, :lot_number, :link_video, :donor_name, :donor_phone, :description, :auctioned, :minimum_value
+  SHOW_PRODUCT_VALUES = proc { |_product, params| params&.fetch(:show_product_values, true) != false }
+
+  attributes :id, :lot_number, :link_video, :donor_name, :donor_phone, :description, :auctioned, :featured,
+             :bidder_name, :bidder_phone
+
+  attribute :minimum_value, if: SHOW_PRODUCT_VALUES, &:minimum_value
 
   attribute :category_id do |object|
     object.category&.id
@@ -12,12 +17,18 @@ class ProductSerializer
     object.category&.title
   end
 
-  attribute :current_value do |object|
+  attribute :current_value, if: SHOW_PRODUCT_VALUES do |object|
     object.winning_value || object.minimum_value
   end
 
   attribute :winning_name do |product|
-    highest_bid = product.bids.order(value: :desc).first
+    highest_bid =
+      if product.association(:bids).loaded?
+        product.bids.max_by(&:value)
+      else
+        product.bids.includes(:profile_user).order(value: :desc).first
+      end
+
     highest_bid&.profile_user&.name
   end
 

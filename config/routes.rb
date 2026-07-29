@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       post 'google_auth', to: 'google_auth#authenticate'
       get 'dashboard', to: 'dashboard#index'
       resources :bids, except: %i[destroy]
+      resource :catalog_setting, only: %i[show update]
       resources :categories
       resources :profile_users do
         get 'bids', to: 'profile_users#bids_per_user', as: 'bids_user'
