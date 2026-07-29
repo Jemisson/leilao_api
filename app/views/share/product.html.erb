@@ -21,7 +21,7 @@
     <meta property="og:image" content="<%= @product.video_thumbnail_url %>" />
   <% end %>
 
-  <% frontend_url = Rails.env.production? ? "https://leilao.codenova.com.br" : "http://localhost:5173" %>
+  <% frontend_url = Rails.env.production? ? "https://api.leiloescapuci.com.br" : "http://localhost:5173" %>
 
   <script>
     setTimeout(function() {
