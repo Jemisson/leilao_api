@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.0.0'
+ruby '3.4.1'
 
 gem 'base64', '~> 0.2.0'
 gem 'bootsnap', require: false
@@ -27,6 +27,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'mina', '0.3.8'
+  gem 'observer'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false

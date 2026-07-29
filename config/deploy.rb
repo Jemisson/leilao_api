@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
+Fixnum = Integer unless Object.const_defined?(:Fixnum)
+Bignum = Integer unless Object.const_defined?(:Bignum)
+
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
 
 # set :rvm_path, '/usr/james/.rvm/scripts/rvm'
-# set :ruby_version, '3.0.0'
+# set :ruby_version, '3.4.1'
 
 # Repository project
 set :application_name, 'leilao_api'
-set :domain, '108.181.224.45'
+set :domain, '45.178.183.76'
 set :deploy_to, '/home/production/leilao_api'
 set :repository, 'git@github.com:Jemisson/leilao_api.git'
 set :branch, 'production'
@@ -20,7 +23,7 @@ set :forward_agent, true
 set :rails_env, 'production'
 
 task :remote_environment do
-  invoke :'rvm:use[ruby-3.0.0]'
+  invoke :'rvm:use[ruby-3.4.1]'
 end
 
 task setup: :remote_environment do
@@ -78,7 +81,7 @@ end
 task :production do
   set :rails_env, 'production'
   set :user, 'production'
-  set :domain, '108.181.224.45'
+  set :domain, '45.178.183.76'
   set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
 
@@ -127,7 +130,7 @@ end
 # task :preview do
 #   set :rails_env, 'preview'
 #   set :user, 'development'
-#   set :domain, '108.181.224.45'
+#   set :domain, '45.178.183.76'
 #   set :deploy_to, '/home/development/clinica_de_olhos_api'
 #   set :branch, 'staging'
 # end

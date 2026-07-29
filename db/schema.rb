@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_08_225230) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_29_122000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_225230) do
     t.index ["profile_user_id"], name: "index_bids_on_profile_user_id"
   end
 
+  create_table "catalog_settings", force: :cascade do |t|
+    t.boolean "show_product_values", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -72,7 +78,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_225230) do
     t.bigint "category_id", null: false
     t.decimal "winning_value"
     t.string "link_video"
+    t.boolean "featured", default: false, null: false
+    t.string "bidder_name"
+    t.string "bidder_phone"
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["featured", "lot_number"], name: "index_products_on_featured_and_lot_number"
   end
 
   create_table "profile_users", force: :cascade do |t|

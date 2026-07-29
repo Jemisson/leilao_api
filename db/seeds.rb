@@ -1,9 +1,16 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# frozen_string_literal: true
+
+admin = User.find_or_initialize_by(email: 'administrador@leiloescapuci.com.br')
+admin.assign_attributes(
+  password: '2@9e~8JY7mP',
+  password_confirmation: '2@9e~8JY7mP',
+  role: 'admin'
+)
+admin.jti ||= SecureRandom.uuid
+admin.save!
+
+CatalogSetting.current
+
+%w[Prendas Gado].each do |title|
+  Category.find_or_create_by!(title: title)
+end

@@ -3,13 +3,13 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :authenticate_user!, except: %i[index]
+      before_action :authenticate_user!, except: %i[index search]
       before_action :set_product, only: %i[show update destroy destroy_image mark_as_sold]
       before_action :authorize_product, only: %i[show update destroy destroy_image mark_as_sold]
 
       def index
         products = ProductFilter.retrieve_all(params)
-        render json: ProductSerializer.new(
+        render json: product_serializer(
           products,
           meta: {
             total_count: products.total_count,
@@ -21,7 +21,7 @@ module Api
       end
 
       def show
-        render json: ProductSerializer.new(@product).serializable_hash.to_json, status: :ok
+        render json: product_serializer(@product).serializable_hash.to_json, status: :ok
       end
 
       def create
@@ -46,7 +46,7 @@ module Api
       end
 
       def destroy
-        @product.destroy
+        @product.destroy!
         head :no_content
       end
 
@@ -61,17 +61,17 @@ module Api
       end
 
       def mark_as_sold
-        if @product.auctioned.zero?
-          ProductService.mark_as_sold(@product)
-          render json: { message: 'Produto arrematado com sucesso!', product: @product }, status: :ok
+        result = ProductService.mark_as_sold(@product, mark_as_sold_params)
+        if result[:success]
+          render json: { message: 'Arremate salvo com sucesso!', product: result[:product] }, status: :ok
         else
-          render json: { error: 'Produto já foi arrematado' }, status: :unprocessable_entity
+          render json: { error: result[:error] }, status: :unprocessable_entity
         end
       end
 
       def search
         products = ProductFilter.retireve_filtered_produducts(params)
-        render json: ProductSerializer.new(
+        render json: product_serializer(
           products, meta: {
             total_count: products.total_count,
             total_pages: products.total_pages,
@@ -85,7 +85,7 @@ module Api
 
       def set_product
         id = params[:id] || params[:product_id]
-        @product = Product.find(id)
+        @product = ProductFilter.search(id)
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Produto não encontrado' }, status: :not_found
       end
@@ -95,9 +95,16 @@ module Api
       end
 
       def attach_images
-        params[:images].each do |image|
-          @product.images.attach(image)
-        end
+        params[:images].each { |image| @product.images.attach(image) }
+      end
+
+      def product_serializer(record, options = {})
+        params = { show_product_values: CatalogSetting.current.show_product_values }
+        ProductSerializer.new(record, { params: params }.merge(options))
+      end
+
+      def mark_as_sold_params
+        params.fetch(:product, params).permit(:bidder_name, :bidder_phone, :winning_value)
       end
 
       def product_params
@@ -105,7 +112,7 @@ module Api
           .require(:product)
           .permit(:lot_number, :link_video, :donor_name, :donor_phone, :minimum_value,
                   :bidder_name, :bidder_phone, :winning_value, :description,
-                  :auctioned, :category_id, images: [])
+                  :auctioned, :featured, :category_id, images: [])
       end
     end
   end
