@@ -3,29 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title><%= @product.lot_number %> |Leilões Virtuais</title>
+  <% video_embed_url = @product.video_embed_url %>
+  <% video_thumbnail_url = @product.video_thumbnail_url %>
+  <% product_share_image_url =
+       if @product.share_image
+         share_image_url(@product)
+       elsif video_thumbnail_url.present?
+         video_thumbnail_url
+       end
+  %>
 
   <meta property="og:title" content="<%= @product.lot_number %>" />
   <meta property="og:description" content="<%= @product.description.truncate(100) %>" />
-  <meta property="og:url" content="<%= request.original_url %>" />
-  <meta property="og:type" content="website" />
+  <meta property="og:url" content="<%= share_url(@product) %>" />
+  <meta property="og:type" content="<%= video_embed_url.present? ? 'video.other' : 'website' %>" />
 
-  <% if @product.images.attached? && @product.link_video.blank?%>
-    <meta property="og:image" content="<%= polymorphic_url(@product.images.first, host: request.base_url) %>" />
-  <% elsif @product.link_video.present? %>
-    <meta property="og:type" content="video.other" />
-    <meta property="og:video:url" content="<%= @product.video_embed_url %>" />
-    <meta property="og:video:secure_url" content="<%= @product.video_embed_url %>" />
+  <% if product_share_image_url.present? %>
+    <meta property="og:image" content="<%= product_share_image_url %>" />
+    <meta property="og:image:secure_url" content="<%= product_share_image_url %>" />
+    <meta property="og:image:type" content="image/jpeg" />
+  <% end %>
+
+  <% if video_embed_url.present? %>
+    <meta property="og:video:url" content="<%= video_embed_url %>" />
+    <meta property="og:video:secure_url" content="<%= video_embed_url %>" />
     <meta property="og:video:type" content="text/html" />
     <meta property="og:video:width" content="1280" />
     <meta property="og:video:height" content="720" />
-    <meta property="og:image" content="<%= @product.video_thumbnail_url %>" />
   <% end %>
-
-  <% frontend_url = Rails.env.production? ? "https://api.leiloescapuci.com.br" : "http://localhost:5173" %>
 
   <script>
     setTimeout(function() {
-      window.location.href = "<%= "#{frontend_url}/produto/#{@product.id}" %>";
+      window.location.href = "<%= product_url(@product) %>";
     }, 1000);
   </script>
 </head>

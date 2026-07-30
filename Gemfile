@@ -7,6 +7,7 @@ gem 'bootsnap', require: false
 gem 'devise'
 gem 'devise-jwt'
 gem 'httpparty', '~> 0.2.0'
+gem 'image_processing', '~> 1.14'
 gem 'jsonapi-serializer'
 gem 'kaminari'
 gem 'omniauth'
@@ -15,8 +16,16 @@ gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'pundit', '~> 2.4'
 gem 'rack-cors'
-gem 'rails', '~> 7.1.5'
-gem 'redis', '~> 5.3'
+gem 'actionmailbox', '~> 7.1.5', require: false
+gem 'actionmailer', '~> 7.1.5', require: false
+gem 'actionpack', '~> 7.1.5', require: false
+gem 'actiontext', '~> 7.1.5', require: false
+gem 'actionview', '~> 7.1.5', require: false
+gem 'activejob', '~> 7.1.5', require: false
+gem 'activemodel', '~> 7.1.5', require: false
+gem 'activerecord', '~> 7.1.5', require: false
+gem 'activestorage', '~> 7.1.5', require: false
+gem 'railties', '~> 7.1.5', require: false
 gem 'rspec-rails', '~> 7.1'
 gem 'stringio', '~> 3.1', '>= 3.1.2'
 gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
