@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post 'google_auth', to: 'google_auth#authenticate'
+      patch 'users/password', to: 'users/passwords#update'
       get 'dashboard', to: 'dashboard#index'
       resources :bids, except: %i[destroy]
       resource :catalog_setting, only: %i[show update]
