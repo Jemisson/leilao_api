@@ -62,5 +62,17 @@ RSpec.describe 'Share products', type: :request do
       expect(response.media_type).to eq('image/jpeg')
       expect(response.body.bytesize).to be_positive
     end
+
+    it 'falls back to the original image when optimization fails' do
+      product = create_product_with_image
+      variant = instance_double(ActiveStorage::Variant)
+
+      allow_any_instance_of(Product).to receive(:share_image_variant).and_return(variant)
+      allow(variant).to receive(:processed).and_raise(StandardError, 'missing image processor')
+
+      get share_product_image_path(product)
+
+      expect(response).to redirect_to(%r{/rails/active_storage/blobs/redirect/})
+    end
   end
 end

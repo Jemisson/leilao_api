@@ -18,22 +18,31 @@ class ShareController < ActionController::Base
     else
       redirect_to rails_blob_url(image, host: request.base_url), allow_other_host: false
     end
+  rescue StandardError => e
+    Rails.logger.error(
+      "Share image processing failed for product_id=#{params[:id]}: #{e.class} - #{e.message}"
+    )
+    redirect_to rails_blob_url(image, host: request.base_url), allow_other_host: false
   end
 
   private
 
   def frontend_url
-    ENV.fetch('FRONTEND_URL') { default_frontend_url }.delete_suffix('/')
+    configured_url('FRONTEND_URL') || default_frontend_url
   end
 
   def api_url
-    ENV.fetch('API_PUBLIC_URL') { "#{request.protocol}#{request.host_with_port}" }.delete_suffix('/')
+    configured_url('API_PUBLIC_URL') || "#{request.protocol}#{request.host_with_port}"
+  end
+
+  def configured_url(name)
+    ENV[name].presence&.delete_suffix('/')
   end
 
   def default_frontend_url
     return 'http://localhost:5173' unless Rails.env.production?
 
-    "#{request.protocol}#{request.host_with_port}"
+    'https://leiloescapuci.com.br'
   end
 
   def share_url(product)
