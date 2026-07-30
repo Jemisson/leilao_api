@@ -6,11 +6,6 @@ Rails.application.configure do
   config.eager_load = true
   config.consider_all_requests_local = false
   config.active_storage.service = :production
-  config.action_cable.mount_path = '/cable'
-  config.action_cable.url = 'wss://api.leiloescapuci.com.br/cable'
-  config.action_cable.allowed_request_origins = [
-    'https://api.leiloescapuci.com.br'
-  ]
   config.force_ssl = true
 
   config.log_formatter = ::Logger::Formatter.new
@@ -32,6 +27,4 @@ Rails.application.configure do
   config.i18n.fallbacks = true
   config.active_support.report_deprecations = false
   config.active_record.dump_schema_after_migration = false
-  config.action_cable.disable_request_forgery_protection = true
-
 end

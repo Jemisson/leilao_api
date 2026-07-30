@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  mount ActionCable.server => '/cable'
-
   devise_for :users, path: '', path_names: {
                                  sign_in: 'login',
                                  sign_out: 'logout',
@@ -14,6 +12,9 @@ Rails.application.routes.draw do
                      }
 
   get 'share/products/:id', to: 'share#product', as: :share_product
+  get 'share/products/:id/image', to: 'share#product_image', as: :share_product_image
+  get 'compartilhar/produto/:id', to: 'share#product'
+  get 'compartilhar/produto/:id/image', to: 'share#product_image'
 
   namespace :api do
     namespace :v1 do

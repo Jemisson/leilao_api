@@ -21,8 +21,6 @@ set :user, 'production'
 set :port, '22'
 set :forward_agent, true
 set :rails_env, 'production'
-set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
-set :cable_log, "#{deploy_to}/shared/log/cable.log"
 
 task :remote_environment do
   invoke :'rvm:use[ruby-3.4.1]'
@@ -57,9 +55,6 @@ task setup: :remote_environment do
   queue! %(touch "#{deploy_to}/shared/config/secrets.yml")
   queue  %(echo "-----> Be sure to edit 'shared/config/secrets.yml'.")
 
-  queue! %(touch "#{deploy_to}/shared/log/cable.log")
-  queue! %(chmod g+rx,u+rw "#{deploy_to}/shared/log/cable.log")
-
   queue! %(touch "#{deploy_to}/shared/log/production.log")
   queue! %(chmod g+rx,u+rw "#{deploy_to}/shared/log/production.log")
 end
@@ -76,8 +71,6 @@ task deploy: :remote_environment do
     to :launch do
       queue %(echo -n '-----> Creating new restart.txt: ')
       queue "touch #{deploy_to}/shared/tmp/restart.txt"
-
-      invoke :'action_cable:restart'
     end
   end
 end
@@ -89,9 +82,6 @@ task :production do
   set :domain, '45.178.183.76'
   set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
-
-  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
-  set :cable_log, "#{deploy_to}/shared/log/cable.log"
 end
 
 # Server staging
@@ -101,34 +91,6 @@ task :staging do
   set :domain, '108.181.224.196'
   set :deploy_to, '/home/production/leilao_api'
   set :branch, 'production'
-
-  set :cable_pid, "#{deploy_to}/shared/tmp/pids/cable.pid"
-  set :cable_log, "#{deploy_to}/shared/log/cable.log"
-end
-
-desc 'Start Action Cable'
-task 'action_cable:start': :remote_environment do
-  queue! %(echo "-----> Starting Action Cable...")
-  queue! %(mkdir -p #{deploy_to}/shared/tmp/pids)
-  queue! %(cd #{deploy_to}/current && RACKUP=cable_server.rb RAILS_ENV=#{rails_env} nohup bundle exec puma -p 3002 -e #{rails_env} --pidfile #{cable_pid} > #{cable_log} 2>&1 &)
-end
-
-desc 'Stop Action Cable'
-task 'action_cable:stop': :remote_environment do
-  queue! %(echo "-----> Stopping Action Cable...")
-  queue! %(
-    if [ -f #{cable_pid} ]; then
-      kill -TERM $(cat #{cable_pid}) && rm #{cable_pid};
-    else
-      echo "Cable PID file not found. Skipping stop.";
-    fi
-  )
-end
-
-desc 'Restart Action Cable'
-task 'action_cable:restart': :remote_environment do
-  invoke :'action_cable:stop'
-  invoke :'action_cable:start'
 end
 
 # Server preview
